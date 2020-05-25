@@ -1,0 +1,455 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Sasstics API V1",
+    "description" : "Simple SASS Sales Statistics",
+    "contact" : {
+      "email" : "hello@sasstics.com"
+    },
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/Sasstics3/SassticsAPI/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  }, {
+    "url" : "https://api.sasstics.com/v1",
+    "description" : "Sasstics V1 Production API"
+  }, {
+    "url" : "https://staging.sasstics.com/v1",
+    "description" : "Sasstics V1 Staging API"
+  } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  }, {
+    "ApiKeyAuth" : [ ]
+  } ],
+  "tags" : [ {
+    "name" : "accounts",
+    "description" : "sasstics account"
+  }, {
+    "name" : "customers",
+    "description" : "your system users"
+  }, {
+    "name" : "events",
+    "description" : "events to track and compare"
+  }, {
+    "name" : "payments",
+    "description" : "track customer payments"
+  }, {
+    "name" : "reports",
+    "description" : "data metrics and conversions"
+  }, {
+    "name" : "users",
+    "description" : "sasstics account users"
+  } ],
+  "paths" : {
+    "/accounts" : {
+      "post" : {
+        "tags" : [ "accounts" ],
+        "summary" : "create account",
+        "description" : "creates a sastics account",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/body"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "account created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "The request failed validation.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ ]
+      }
+    },
+    "/users/{uuid}" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "get user",
+        "description" : "Retrieve a user using the users uuid",
+        "parameters" : [ {
+          "name" : "uuid",
+          "in" : "path",
+          "description" : "resource uuid",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "ok",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorised request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The resource was not found.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "users" ],
+        "summary" : "update user",
+        "description" : "Updates a user and account details",
+        "parameters" : [ {
+          "name" : "uuid",
+          "in" : "path",
+          "description" : "resource uuid",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "User successfully updated"
+          },
+          "401" : {
+            "description" : "Unauthorised request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "The resource was not found.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "The request failed validation.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login" : {
+      "post" : {
+        "tags" : [ "users" ],
+        "summary" : "retrieve token",
+        "description" : "authenticate and retrieve a an Access Token",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/body_1"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Accepted, returns a JWT access token containing the user's UUID",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorised request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Account" : {
+        "required" : [ "account_name" ],
+        "properties" : {
+          "uuid" : {
+            "type" : "string",
+            "format" : "uuid",
+            "readOnly" : true,
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "account_name" : {
+            "type" : "string",
+            "example" : "Company Ltd"
+          }
+        }
+      },
+      "Error" : {
+        "required" : [ "error", "errors" ],
+        "properties" : {
+          "error" : {
+            "type" : "boolean",
+            "example" : true
+          },
+          "errors" : {
+            "type" : "array",
+            "description" : "error messages array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "Role" : {
+        "properties" : {
+          "uuid" : {
+            "type" : "string",
+            "format" : "uuid",
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string",
+            "enum" : [ "admin", "support", "investor" ]
+          }
+        }
+      },
+      "User" : {
+        "required" : [ "email", "uuid" ],
+        "properties" : {
+          "uuid" : {
+            "type" : "string",
+            "format" : "uuid",
+            "readOnly" : true,
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "first_name" : {
+            "type" : "string",
+            "example" : "Foo"
+          },
+          "last_name" : {
+            "type" : "string",
+            "example" : "bar"
+          },
+          "email" : {
+            "type" : "string",
+            "format" : "email",
+            "example" : "info@example.com"
+          },
+          "password" : {
+            "type" : "string",
+            "format" : "password",
+            "writeOnly" : true
+          },
+          "password_confirmation" : {
+            "type" : "string",
+            "description" : "re-type password",
+            "format" : "password",
+            "writeOnly" : true
+          },
+          "role" : {
+            "$ref" : "#/components/schemas/Role"
+          },
+          "account" : {
+            "$ref" : "#/components/schemas/Account"
+          }
+        }
+      },
+      "body" : {
+        "required" : [ "account_name", "email", "first_name", "last_name", "password", "password_confirmation" ],
+        "type" : "object",
+        "properties" : {
+          "account_name" : {
+            "type" : "string",
+            "example" : "Company Ltd"
+          },
+          "email" : {
+            "type" : "string",
+            "format" : "email",
+            "example" : "company@example.com"
+          },
+          "password" : {
+            "type" : "string",
+            "format" : "password"
+          },
+          "password_confirmation" : {
+            "type" : "string",
+            "description" : "Re-type password",
+            "format" : "password"
+          },
+          "first_name" : {
+            "type" : "string",
+            "example" : "Foo"
+          },
+          "last_name" : {
+            "type" : "string",
+            "example" : "bar"
+          }
+        }
+      },
+      "body_1" : {
+        "required" : [ "email", "password" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "format" : "email"
+          },
+          "password" : {
+            "type" : "string",
+            "format" : "password"
+          }
+        }
+      },
+      "inline_response_200" : {
+        "type" : "object",
+        "properties" : {
+          "success" : {
+            "type" : "boolean",
+            "example" : true
+          },
+          "access_token" : {
+            "type" : "string",
+            "description" : "JWT token, base64 encoded",
+            "format" : "JWT",
+            "example" : "eyJhbGci.eyJzdWIi.TJVA95OrM"
+          },
+          "expires_in" : {
+            "type" : "number",
+            "description" : "validity duration"
+          },
+          "token_type" : {
+            "type" : "string",
+            "description" : "Type of token",
+            "example" : "Bearer"
+          }
+        }
+      }
+    },
+    "responses" : {
+      "NotFound" : {
+        "description" : "The resource was not found.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "UnprocessibleEntity" : {
+        "description" : "The request failed validation.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorised" : {
+        "description" : "Unauthorised request",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "parameters" : {
+      "uuidParam" : {
+        "name" : "uuid",
+        "in" : "path",
+        "description" : "resource uuid",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "string",
+          "format" : "uuid"
+        }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer"
+      },
+      "ApiKeyAuth" : {
+        "type" : "apiKey",
+        "name" : "X-API-Key",
+        "in" : "header"
+      }
+    }
+  }
+}
